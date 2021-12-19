@@ -1,0 +1,27 @@
+name: Ninsar CI
+
+on:
+  push:
+    branches: [main]
+    tags-ignore: ["v*"]
+  pull_request:
+    branches: [main]
+  create:
+    tags: ["v*"]
+    branches: [main]
+
+
+jobs:
+
+  build:
+    strategy:
+      fail-fast: true
+      matrix:
+        include:
+          - os: ubuntu-latest
+            platfom: android
+
+          - os: macos-latest
+            platfom: iOS
+    steps:
+      run: echo ${{matrix.os}} ${{matrix.platform}}
