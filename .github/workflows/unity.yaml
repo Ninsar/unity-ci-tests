@@ -24,4 +24,4 @@ jobs:
           - os: macos-latest
             platfom: iOS
     steps:
-      run: echo ${{matrix.os}} ${{matrix.platform}}
+      - run: echo ${{matrix.os}} ${{matrix.platform}}
