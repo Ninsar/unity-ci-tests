@@ -19,6 +19,7 @@ jobs:
       matrix:
         unity-version: [2020.3.15f1]
         platform: [Android, iOS]
+        sign: [false]
     
     runs-on: ubuntu-latest
 
@@ -45,6 +46,33 @@ jobs:
           unityVersion: ${{ matrix.unity-version }}
           buildsPath: Builds
           versioning: Tag
+          androidAppBundle: false
+          androidKeystoreName: ${{ matrix.sign && 'user.keystore' || '' }}
+          androidKeystoreBase64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
+          androidKeystorePass: ${{ secrets.ANDROID_KEYSTORE_PASS }}
+          androidKeyaliasName: ${{ secrets.ANDROID_KEYALIAS_NAME }}
+          androidKeyaliasPass: ${{ secrets.ANDROID_KEYALIAS_PASS }}
+
+      # - name: Build Xcode project if iOS
+
+      - name: Build Android as .aab if release
+        if: matrix.platform == 'Android' && github.event == 'create'
+        uses: game-ci/unity-builder@v2
+        env:
+          UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
+          UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
+          UNITY_SERIAL: ${{ secrets.UNITY_SERIAL }}
+        with:
+          targetPlatform: ${{ matrix.platform }}
+          unityVersion: ${{ matrix.unity-version }}
+          buildsPath: Builds
+          versioning: Tag
+          androidAppBundle: true
+          androidKeystoreName: ${{ matrix.sign && 'user.keystore' || '' }}
+          androidKeystoreBase64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
+          androidKeystorePass: ${{ secrets.ANDROID_KEYSTORE_PASS }}
+          androidKeyaliasName: ${{ secrets.ANDROID_KEYALIAS_NAME }}
+          androidKeyaliasPass: ${{ secrets.ANDROID_KEYALIAS_PASS }}
 
       - uses: actions/upload-artifact@v2
         with:
