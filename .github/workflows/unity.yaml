@@ -17,15 +17,10 @@ jobs:
     strategy:
       fail-fast: true
       matrix:
-        include:
-          - os: ubuntu-latest
-            platfom: Android
-            unity-version: 2020.3.15f1
-
-          - os: macos-latest
-            platfom: iOS
+        unity-version: [2020.3.15f1]
+        platfom: [Android, iOS]
     
-    runs-on: ${{matrix.os}}
+    runs-on: ubuntu-latest
 
     steps:
       - uses: actions/checkout@v2
