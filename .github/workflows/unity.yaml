@@ -32,9 +32,8 @@ jobs:
         uses: actions/cache@v2
         with:
           path: Library
-          key: Library-${{ hashFiles('Assets/**', 'Packages/**', 'ProjectSettings/**') }}
-          restore-keys: |
-            Library-
+          key: Library-${{ github.event.repository.name }}
+          restore-keys: Library-${{ github.event.repository.name }}
 
       - name: Build project
         uses: game-ci/unity-builder@v2
