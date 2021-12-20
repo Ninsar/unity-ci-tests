@@ -18,7 +18,7 @@ jobs:
       fail-fast: true
       matrix:
         unity-version: [2020.3.15f1]
-        platform: [Android, iOS]
+        platform: [Android]
         sign: [false]
     
     runs-on: ubuntu-latest
@@ -53,10 +53,8 @@ jobs:
           androidKeyaliasName: ${{ secrets.ANDROID_KEYALIAS_NAME }}
           androidKeyaliasPass: ${{ secrets.ANDROID_KEYALIAS_PASS }}
 
-      # - name: Build Xcode project if iOS
-
       - name: Build Android as .aab if release
-        if: matrix.platform == 'Android' && github.event == 'create'
+        if: matrix.platform == 'Android'
         uses: game-ci/unity-builder@v2
         env:
           UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
@@ -74,29 +72,35 @@ jobs:
           androidKeyaliasName: ${{ secrets.ANDROID_KEYALIAS_NAME }}
           androidKeyaliasPass: ${{ secrets.ANDROID_KEYALIAS_PASS }}
 
+      # - name: Build Xcode project as .ipa if iOS
+        
+        
+      - name: Cleanup Xcode project if iOS
+        run: find . -type d | sed -e "s/[^-][^\/]*\//  |/g" -e "s/|\([^ ]\)/| - \1/"
+
       - uses: actions/upload-artifact@v2
         with:
           name: Build-${{matrix.platform}}
           path: Builds/${{matrix.platform}}
   
-  # release:
-  #   if: github.event == 'create'
-  #   needs: build
-  #   runs-on: ubuntu-latest
+  release:
+    if: startsWith(github.ref, 'refs/tags/v')
+    needs: build
+    runs-on: ubuntu-latest
 
-  #   steps:
-  #     - name: Download builds
-  #       uses: actions/download-artifact@v2
-  #       with:
-  #         path: Builds/
+    steps:
+      - name: Download builds
+        uses: actions/download-artifact@v2
+        with:
+          path: Builds/
       
-  #     - name: Create release
-  #       uses: softprops/action-gh-release@v1
-  #       with:
-  #         generate_release_notes: true
-  #         files: Builds/*
+      - name: Create release
+        uses: softprops/action-gh-release@v1
+        with:
+          generate_release_notes: true
+          files: Builds/*
 
   # publish:
-  #   if: github.event == 'create'
+  #   if: startsWith(github.ref, 'refs/tags/v')
   #   needs: build
   #   runs-on: ubuntu-latest
