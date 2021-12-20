@@ -51,7 +51,7 @@ jobs:
       - uses: actions/upload-artifact@v2
         with:
           name: Build-${{matrix.platform}}
-          path: Build/${{matrix.platform}}
+          path: Builds/${{matrix.platform}}
   
   # release:
   #   if: github.event == 'create'
