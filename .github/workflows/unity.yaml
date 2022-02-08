@@ -186,7 +186,7 @@ jobs:
       #     path: Builds/
 
       - name: Dummy files
-        run:
+        run: |
           mkdir -p Builds/Build-Android
           mkdir -p Builds/Build-iOS
           ls -R
