@@ -46,7 +46,7 @@ jobs:
           githubToken: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Run Code Quality inspection
-        uses: florius0/resharper-unity-ci@v0.2.2
+        uses: florius0/resharper-unity-ci@v0.2.3
         with:
             solution: matrix.solution
             build: false
