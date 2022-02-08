@@ -192,13 +192,19 @@ jobs:
           echo 'Android' > Builds/Build-Android/Android.apk
           echo 'Android' > Builds/Build-Android/Android.aab
           echo 'iOS' > Builds/Build-iOS/iOS.ipa
+          
+      - name: Archive all builds
+        run: find Builds -maxdepth 1 -mindepth 1 -type d -exec tar -czvf {}.tar.gz {} \;
 
       - name: Create release
         uses: softprops/action-gh-release@v1
         with:
           generate_release_notes: true
           fail_on_unmatched_files: false
-          files: Builds/**/*.*
+          files: |
+            Builds/**/*.apk
+            Builds/**/*.ipa
+            Builds/*.tar.gz
 
 
       # - name: Publish
