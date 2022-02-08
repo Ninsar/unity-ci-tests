@@ -195,7 +195,7 @@ jobs:
 
       - name: Get existing builds
         id: builds
-        run: echo "::set-output name=build-files::`echo Builds/*`"
+        run: echo "::set-output name=build-files::`find  Builds -maxdepth 1 -mindepth 1`"
 
       - run: echo ${{steps.builds.outputs.build-files}}
           
