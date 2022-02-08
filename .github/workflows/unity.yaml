@@ -44,6 +44,12 @@ jobs:
           UNITY_SERIAL: ${{ secrets.UNITY_SERIAL }}
         with:
           githubToken: ${{ secrets.GITHUB_TOKEN }}
+      
+      - run:
+          ls
+
+      - run:
+          ls /
 
       - name: Run Code Quality inspection
         uses: florius0/resharper-unity-ci@v0.2.3
