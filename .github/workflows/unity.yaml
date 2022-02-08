@@ -45,17 +45,18 @@ jobs:
       #   with:
       #     githubToken: ${{ secrets.GITHUB_TOKEN }}
       
-      - run:
-          ls
-
-      - run:
-          ls /
-
       - name: Run Code Quality inspection
         uses: florius0/resharper-unity-ci@v0.2.2
         with:
             solution: ${{ matrix.solution }}
             build: false
+            hide-output: false
+
+      - run:
+          ls
+
+      - run:
+          ls /
 
       # - name: Run Asset Quality inspection
 
