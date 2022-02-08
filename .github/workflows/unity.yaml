@@ -189,6 +189,7 @@ jobs:
         run:
           mkdir -p Builds/Build-Android
           mkdir -p Builds/Build-iOS
+          ls -R
           echo 'Android' > Builds/Build-Android/Android.apk
           echo 'Android' > Builds/Build-Android/Android.aab
           echo 'iOS' > Builds/Build-iOS/iOS.ipa
