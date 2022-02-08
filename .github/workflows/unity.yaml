@@ -195,7 +195,7 @@ jobs:
 
       - name: Get existing builds
         id: builds
-        run: echo "::set-output name=build-files::`find Builds -type f`"
+        run: echo "::set-output name=build-files::`find Builds -type f -exec echo {} +`"
 
       - run: echo ${{steps.builds.outputs.build-files}}
           
