@@ -145,7 +145,7 @@ jobs:
       - name: Fix File Permissions
         if: matrix.platform == 'iOS' # run only on iOS, to enable copy-pasted matrix
         run: |
-          find ${{ format('{0}/Build/iOS', github.workspace) }} -type f -name "**.sh" -exec chmod +x {} \;
+          find ${{ format('{0}/Builds/iOS', github.workspace) }} -type f -name "**.sh" -exec chmod +x {} \;
 
       - name: Build Xcode project
         if: matrix.platform == 'iOS' # run only on iOS, to enable copy-pasted matrix
