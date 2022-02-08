@@ -109,10 +109,8 @@ jobs:
           androidKeyaliasName: ${{ secrets.ANDROID_KEYALIAS_NAME }}
           androidKeyaliasPass: ${{ secrets.ANDROID_KEYALIAS_PASS }}
 
-      - name: Build .ipa if iOS
-        run: echo "Build goes here"
-        
-      - uses: actions/upload-artifact@v2
+      - name: Upload Builds
+        uses: actions/upload-artifact@v2
         with:
           name: Build-${{matrix.platform}}
           path: Builds/${{matrix.platform}}
@@ -162,10 +160,10 @@ jobs:
           APPSTORE_ISSUER_ID: ${{ secrets.APPSTORE_ISSUER_ID }}
           APPSTORE_P8: ${{ secrets.APPSTORE_P8 }}
           IOS_APP_ID: com.company.application # Change it to match your unity bundle id
-          IOS_BUILD_PATH: ${{ format('{0}/Build/iOS', github.workspace) }}
+          IOS_BUILD_PATH: ${{ format('{0}/Builds/iOS', github.workspace) }}
           PROJECT_NAME: Your Project Name
         run:
-          echo "Build .ipa"
+          echo "Build .ipa" > Builds/iOS/iOS.ipa
           echo "Build to appstore"
 
       - name: Cleanup to avoid storage limit
@@ -173,6 +171,15 @@ jobs:
         uses: geekyeggo/delete-artifact@v1
         with:
           name: Build-iOS
+
+      - name: Upload .ipa
+        if: matrix.platform == 'iOS'
+        uses: actions/upload-artifact@v2
+        with:
+          name: Build-iOS
+          path: Builds/iOS
+          retention-days: 1
+
   
   release:
     if: startsWith(github.ref, 'refs/tags/v')
