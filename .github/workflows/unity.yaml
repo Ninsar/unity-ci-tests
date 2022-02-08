@@ -52,7 +52,7 @@ jobs:
           ls /
 
       - name: Run Code Quality inspection
-        uses: florius0/resharper-unity-ci@v0.2.3
+        uses: florius0/resharper-unity-ci@v0.2.2
         with:
             solution: ${{ matrix.solution }}
             build: false
