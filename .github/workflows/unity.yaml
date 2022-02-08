@@ -166,12 +166,6 @@ jobs:
           echo "Build .ipa" > Builds/iOS/iOS.ipa
           echo "Build to appstore"
 
-      - name: Cleanup to avoid storage limit
-        if: always()
-        uses: geekyeggo/delete-artifact@v1
-        with:
-          name: Build-iOS
-
       - name: Upload .ipa
         if: matrix.platform == 'iOS'
         uses: actions/upload-artifact@v2
@@ -241,3 +235,17 @@ jobs:
             Builds/iOS
             Builds/Android
             Builds/WebGL
+
+      - name: Cleanup to avoid storage limit
+        if: always()
+        uses: geekyeggo/delete-artifact@v1
+        with:
+          failOnError: false
+          name: |
+            Build-StandaloneOSX
+            Build-StandaloneWindows
+            Build-StandaloneWindows64
+            Build-StandaloneLinux64
+            Build-iOS
+            Build-Android
+            Build-WebGL
