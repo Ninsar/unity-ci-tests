@@ -31,10 +31,9 @@ jobs:
         uses: actions/cache@v2
         with:
           path: Library
-          key: Library-${{ matrix.unity-version }}-${{ matrix.platform }}-${{ hashFiles('Assets/**', 'Packages/**', 'ProjectSettings/**') }}
+          key: Library-${{ matrix.platform }}-${{ hashFiles('Assets/**', 'Packages/**', 'ProjectSettings/**') }}
           restore-keys: |
-            Library-${{ matrix.unity-version }}-${{ matrix.platform }}
-            Library-${{ matrix.unity-version }}
+            Library-${{ matrix.platform }}
             Library-
       
       - name: Run Tests
@@ -76,10 +75,9 @@ jobs:
         uses: actions/cache@v2
         with:
           path: Library
-          key: Library-${{ matrix.unity-version }}-${{ matrix.platform }}-${{ hashFiles('Assets/**', 'Packages/**', 'ProjectSettings/**') }}
+          key: Library-${{ matrix.platform }}-${{ hashFiles('Assets/**', 'Packages/**', 'ProjectSettings/**') }}
           restore-keys: |
-            Library-${{ matrix.unity-version }}-${{ matrix.platform }}
-            Library-${{ matrix.unity-version }}
+            Library-${{ matrix.platform }}
             Library-
 
       - name: Build project
@@ -109,7 +107,6 @@ jobs:
           UNITY_SERIAL: ${{ secrets.UNITY_SERIAL }}
         with:
           targetPlatform: ${{ matrix.platform }}
-          unityVersion: ${{ matrix.unity-version }}
           buildsPath: Builds
           versioning: Tag
           androidAppBundle: true
