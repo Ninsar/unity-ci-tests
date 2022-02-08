@@ -181,60 +181,16 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Download build for StandaloneOSX
+      - name: Download all builds
         uses: actions/download-artifact@v2
         with:
-          name: Build-StandaloneOSX
-          path: Builds/StandaloneOSX
-
-      - name: Download build for StandaloneWindows
-        uses: actions/download-artifact@v2
-        with:
-          name: Build-StandaloneWindows
-          path: Builds/StandaloneWindows
-
-      - name: Download build for StandaloneWindows64
-        uses: actions/download-artifact@v2
-        with:
-          name: Build-StandaloneWindows64
-          path: Builds/StandaloneWindows64
-
-      - name: Download build for StandaloneLinux64
-        uses: actions/download-artifact@v2
-        with:
-          name: Build-StandaloneLinux64
-          path: Builds/StandaloneLinux64
-
-      - name: Download build for iOS
-        uses: actions/download-artifact@v2
-        with:
-          name: Build-iOS
-          path: Builds/iOS
-
-      - name: Download build for Android
-        uses: actions/download-artifact@v2
-        with:
-          name: Build-Android
-          path: Builds/Android
-
-      - name: Download build for WebGL
-        uses: actions/download-artifact@v2
-        with:
-          name: Build-WebGL
-          path: Builds/WebGL
+          path: Builds/
           
       - name: Create release
         uses: softprops/action-gh-release@v1
         with:
           generate_release_notes: true
-          files: |
-            Builds/StandaloneOSX
-            Builds/StandaloneWindows
-            Builds/StandaloneWindows64
-            Builds/StandaloneLinux64
-            Builds/iOS
-            Builds/Android
-            Builds/WebGL
+          files: Builds/*
 
       - name: Cleanup to avoid storage limit
         if: always()
