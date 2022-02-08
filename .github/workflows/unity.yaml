@@ -17,7 +17,7 @@ jobs:
       fail-fast: false
       matrix:
         platform: [Android, iOS]
-        solution: ['./unity-ci-tests.sln']
+        solution: ['./${{ github.event.repository.name }}.sln']
       
     runs-on: ubuntu-latest
 
@@ -47,7 +47,7 @@ jobs:
           githubToken: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Run Code Quality inspection
-        uses: florius0/resharper-unity-ci
+        uses: florius0/resharper-unity-ci@v0.2.1
         with:
             solution: matrix.solution
             build: false
