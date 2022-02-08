@@ -12,13 +12,56 @@ on:
 
 jobs:
 
+  test:
+    strategy:
+      fail-fast: false
+      matrix:
+        platform: [Android, iOS]
+        solution: ['./unity-ci-tests.sln']
+      
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          lfs: true
+          submodules: 'recursive'
+
+      - name: Cache Library
+        uses: actions/cache@v2
+        with:
+          path: Library
+          key: Library-${{ matrix.unity-version }}-${{ matrix.platform }}-${{ hashFiles('Assets/**', 'Packages/**', 'ProjectSettings/**') }}
+          restore-keys: |
+            Library-${{ matrix.unity-version }}-${{ matrix.platform }}
+            Library-${{ matrix.unity-version }}
+            Library-
+      
+      - name: Run Tests
+        uses: game-ci/unity-test-runner@v2
+        env:
+          UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
+          UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
+          UNITY_SERIAL: ${{ secrets.UNITY_SERIAL }}
+        with:
+          githubToken: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Run Code Quality inspection
+        uses: florius0/resharper-unity-ci
+        with:
+            solution: matrix.solution
+            build: false
+
+      # - name: Run Asset Quality inspection
+
+      
   build:
     if: github.ref != 'refs/heads/main' # To run only on PRs & Tags
+    needs: test
     strategy:
       fail-fast: true
       matrix:
-        unity-version: [2020.3.15f1]
-        platform: [Android]
+        platform: [Android, iOS]
         sign: [false]
     
     runs-on: ubuntu-latest
@@ -47,8 +90,8 @@ jobs:
           UNITY_SERIAL: ${{ secrets.UNITY_SERIAL }}
         with:
           targetPlatform: ${{ matrix.platform }}
-          unityVersion: ${{ matrix.unity-version }}
           buildsPath: Builds
+          buildName: ${{ matrix.platform == 'iOS' && 'xcode' || matrix.platform}}
           versioning: Tag
           androidAppBundle: false
           androidKeystoreName: ${{ matrix.sign && 'user.keystore' || '' }}
@@ -76,17 +119,18 @@ jobs:
           androidKeyaliasName: ${{ secrets.ANDROID_KEYALIAS_NAME }}
           androidKeyaliasPass: ${{ secrets.ANDROID_KEYALIAS_PASS }}
 
-      # - name: Build .ipa if iOS
+      - name: Build .ipa if iOS
+        run: echo "Build goes here"
         
         
       - name: Cleanup Xcode project if iOS
-        run: find . -type d | sed -e "s/[^-][^\/]*\//  |/g" -e "s/|\([^ ]\)/| - \1/"
+        run: rm -rf Builds/xcode
 
       - uses: actions/upload-artifact@v2
         with:
           name: Build-${{matrix.platform}}
           path: Builds/${{matrix.platform}}
-          retention-days: 5
+          retention-days: 1
   
   release:
     if: startsWith(github.ref, 'refs/tags/v')
@@ -104,8 +148,3 @@ jobs:
         with:
           generate_release_notes: true
           files: Builds/*
-
-  # publish:
-  #   if: startsWith(github.ref, 'refs/tags/v')
-  #   needs: build
-  #   runs-on: ubuntu-latest
