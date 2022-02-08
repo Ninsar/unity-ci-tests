@@ -119,7 +119,7 @@ jobs:
           retention-days: 1
 
   build-ios:
-    if: github.ref != 'refs/heads/main' && matrix.platform == 'iOS' # To run only on iOS on PRs & Tags 
+    if: github.ref != 'refs/heads/main' # To run only on PRs & Tags 
     needs: build
     strategy:
       fail-fast: false
@@ -132,21 +132,25 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
+        if: matrix.platform == 'iOS' # run only on iOS, to enable copy-pasted matrix
         with:
           lfs: true
           submodules: 'recursive'
 
       - name: Download iOS Artifact
+        if: matrix.platform == 'iOS' # run only on iOS, to enable copy-pasted matrix
         uses: actions/download-artifact@v2
         with:
           name: Build-iOS
           path: Builds/iOS
 
       - name: Fix File Permissions
+        if: matrix.platform == 'iOS' # run only on iOS, to enable copy-pasted matrix
         run: |
           find ${{ format('{0}/Build/iOS', github.workspace) }} -type f -name "**.sh" -exec chmod +x {} \;
 
-      - name: Fix File Permissions and Run Fastlane
+      - name: Build Xcode project
+        if: matrix.platform == 'iOS' # run only on iOS, to enable copy-pasted matrix
         env:
           APPLE_CONNECT_EMAIL: ${{ secrets.APPLE_CONNECT_EMAIL }}
           APPLE_DEVELOPER_EMAIL: ${{ secrets.APPLE_DEVELOPER_EMAIL }}
