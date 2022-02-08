@@ -193,18 +193,12 @@ jobs:
           echo 'Android' > Builds/Build-Android/Android.aab
           echo 'iOS' > Builds/Build-iOS/iOS.ipa
 
-      - name: Get existing builds
-        id: builds
-        run: echo "::set-output name=build-files::`echo; find Builds -type f`"
-
-      - run: echo ${{steps.builds.outputs.build-files}}
-          
       - name: Create release
         uses: softprops/action-gh-release@v1
         with:
           generate_release_notes: true
           fail_on_unmatched_files: false
-          files: ${{steps.builds.outputs.build-files}}
+          files: Builds/**/*.*
 
 
       # - name: Publish
